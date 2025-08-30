@@ -1,0 +1,8 @@
+0.6
+2019.2
+Oct 24 2019
+19:01:44
+D:/ALUF/regalu/regalu.sim/sim_1/behav/xsim/glbl.v,1571945291,verilog,,,,glbl,,,,,,,,
+D:/ALUF/regalu/regalu.srcs/sim_1/new/Testbench.v,1756547730,verilog,,,,Testbench,,,,,,,,
+D:/ALUF/regalu/regalu.srcs/sources_1/new/ALU.v,1756547709,verilog,,D:/ALUF/regalu/regalu.srcs/sources_1/new/RegisterFile.v,,ALU,,,,,,,,
+D:/ALUF/regalu/regalu.srcs/sources_1/new/RegisterFile.v,1756547794,verilog,,D:/ALUF/regalu/regalu.srcs/sim_1/new/Testbench.v,,RegisterFile,,,,,,,,

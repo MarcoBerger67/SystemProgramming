@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2019.2 (64-bit)
+# SW Build 2700185 on Thu Oct 24 18:46:05 MDT 2019
+# IP Build 2699827 on Thu Oct 24 21:16:38 MDT 2019
+# Start of session at: Sat Aug 30 17:56:38 2025
+# Process ID: 4184
+# Current directory: D:/ALUF/regalu/regalu.runs/synth_1
+# Command line: vivado.exe -log ALU.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source ALU.tcl
+# Log file: D:/ALUF/regalu/regalu.runs/synth_1/ALU.vds
+# Journal file: D:/ALUF/regalu/regalu.runs/synth_1\vivado.jou
+#-----------------------------------------------------------
+source ALU.tcl -notrace

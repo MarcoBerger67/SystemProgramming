@@ -1,0 +1,7 @@
+Vivado Simulator 2019.2
+Time resolution is 1 ps
+ADD: A + B =         15, Zero = 0, Overflow = 0
+SUB: A - B =          5, Zero = 0, Overflow = 0
+Read Register 1:          0, Read Register 2:          x
+ADDI: A + Imm =         25, Zero = 0
+$finish called at time : 80 ns : File "D:/ALUF/regalu/regalu.srcs/sim_1/new/Testbench.v" Line 99
