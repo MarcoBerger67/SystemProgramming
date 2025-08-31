@@ -12,8 +12,9 @@ input  wire       clk          , // Top level system clock input.
 input  wire       resetn       , // Asynchronous active low reset.
 input  wire       uart_rxd     , // UART Recieve pin.
 input  wire       uart_rx_en   , // Recieve enable
+input  wire       rx_data_read , // 新增输入端口
 output wire       uart_rx_break, // Did we get a BREAK message?
-output wire       uart_rx_valid, // Valid data recieved and available.
+output reg        uart_rx_valid, // Valid data recieved and available.--从wire改到reg
 output reg  [PAYLOAD_BITS-1:0] uart_rx_data   // The recieved data.
 );
 
@@ -92,13 +93,23 @@ localparam FSM_STOP = 3;
 // 
 
 assign uart_rx_break = uart_rx_valid && ~|recieved_data;
-assign uart_rx_valid = fsm_state == FSM_STOP && n_fsm_state == FSM_IDLE;
+//assign uart_rx_valid = fsm_state == FSM_STOP && n_fsm_state == FSM_IDLE;
 
-always @(posedge clk) begin
-    if(!resetn) begin
+// 新增 uart_rx_valid 写的 always 块
+always @(posedge clk or negedge resetn) begin
+    if (!resetn) begin
+        uart_rx_valid <= 1'b0;
         uart_rx_data  <= {PAYLOAD_BITS{1'b0}};
-    end else if (fsm_state == FSM_STOP) begin
-        uart_rx_data  <= recieved_data;
+    end else begin
+        // 当一帧数据接收完成时
+        if (fsm_state == FSM_STOP && n_fsm_state == FSM_IDLE) begin
+            uart_rx_valid <= 1'b1;         // 拉高 valid 标志
+            uart_rx_data  <= recieved_data;  // 同时锁存数据到输出
+        end 
+        // 当CPU读取数据后
+        else if (rx_data_read) begin
+            uart_rx_valid <= 1'b0;         // 拉低 valid 标志
+        end
     end
 end
 
