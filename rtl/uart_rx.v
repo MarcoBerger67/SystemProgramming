@@ -9,12 +9,12 @@
 
 module uart_rx(
 input  wire       clk          , // Top level system clock input.
-input  wire       resetn       , // Asynchronous active low reset.
+input  wire       rst_n       , // Asynchronous active low reset.
 input  wire       uart_rxd     , // UART Recieve pin.
 input  wire       uart_rx_en   , // Recieve enable
-input  wire       rx_data_read , // ĞÂÔöÊäÈë¶Ë¿Ú
+input  wire       rx_data_read , // æ–°å¢è¾“å…¥ç«¯å£
 output wire       uart_rx_break, // Did we get a BREAK message?
-output reg        uart_rx_valid, // Valid data recieved and available.--´Ówire¸Äµ½reg
+output reg        uart_rx_valid, // Valid data recieved and available.--ä»wireæ”¹åˆ°reg
 output reg  [PAYLOAD_BITS-1:0] uart_rx_data   // The recieved data.
 );
 
@@ -95,20 +95,20 @@ localparam FSM_STOP = 3;
 assign uart_rx_break = uart_rx_valid && ~|recieved_data;
 //assign uart_rx_valid = fsm_state == FSM_STOP && n_fsm_state == FSM_IDLE;
 
-// ĞÂÔö uart_rx_valid Ğ´µÄ always ¿é
-always @(posedge clk or negedge resetn) begin
-    if (!resetn) begin
-        uart_rx_valid <= 1'b0;
-        uart_rx_data  <= {PAYLOAD_BITS{1'b0}};
-    end else begin
-        // µ±Ò»Ö¡Êı¾İ½ÓÊÕÍê³ÉÊ±
-        if (fsm_state == FSM_STOP && n_fsm_state == FSM_IDLE) begin
-            uart_rx_valid <= 1'b1;         // À­¸ß valid ±êÖ¾
-            uart_rx_data  <= recieved_data;  // Í¬Ê±Ëø´æÊı¾İµ½Êä³ö
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+    if(!rst_n) begin
+    if(!rst_n) begin
+    if(!rst_n) begin
+    if(!rst_n) begin
+    if(!rst_n) begin
+    if(!rst_n) begin
+            uart_rx_valid <= 1'b1;         // æ‹‰é«˜ valid æ ‡å¿—
+            uart_rx_data  <= recieved_data;  // åŒæ—¶é”å­˜æ•°æ®åˆ°è¾“å‡º
         end 
-        // µ±CPU¶ÁÈ¡Êı¾İºó
+        // å½“CPUè¯»å–æ•°æ®å
         else if (rx_data_read) begin
-            uart_rx_valid <= 1'b0;         // À­µÍ valid ±êÖ¾
+            uart_rx_valid <= 1'b0;         // æ‹‰ä½ valid æ ‡å¿—
         end
     end
 end
