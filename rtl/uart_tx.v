@@ -126,7 +126,7 @@ end
 //
 // Increments the bit counter each time a new bit frame is sent.
 always @(posedge clk) begin : p_bit_counter
-    if(!rst_n) begin
+    if(rst_n) begin
         bit_counter <= 4'b0;
     end else if(fsm_state != FSM_SEND && fsm_state != FSM_STOP) begin
         bit_counter <= {COUNT_REG_LEN{1'b0}};
