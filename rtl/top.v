@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module top (
   input clk,
-  input reset,
+  input rst_n,
 
   input        uart_rx,
   output       uart_tx,
@@ -43,6 +43,8 @@ module top (
   wire   [31:0] uart_write_data;
   wire   [31:0] uart_addr;
   wire          uart_wen;
+
+  wire reset = ~rst_n;
 
   cpu u_cpu(
             .clk(clk),
@@ -106,7 +108,7 @@ sys_bus u_sys_bus(
             .dout(dmem_read_data));
 
   uart_top u_uart(
-                  .rst_n(~reset)
+                  .rst_n(rst_n)
                   ,.clk(clk)
                   ,.uart_rxd(uart_rx) // UART Recieve pin.
                   ,.uart_txd(uart_tx) // UART transmit pin.

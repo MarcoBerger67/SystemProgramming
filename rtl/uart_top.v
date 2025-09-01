@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // 
-// Module: uart_top (Upgraded Version by [yy] 8.31 17：11)
+// Module: uart_top (Upgraded Version by [yy] 8.31 17拢潞11)
 // Notes:
 // - This module keeps the original interface for seamless integration.
 // - It now implements register mapping for data and status access.
@@ -102,8 +102,8 @@ module uart_top (
         .CLK_HZ  (CLK_HZ)
     ) i_uart_rx(
         .clk          (clk),
-        .resetn       (rst_n),
-        .rx_data_read (rx_data_read_clear), // <--- 新增的连接！（8.31 17：11）
+        .rst_n       (rst_n),
+        .clk(clk), .rst_n(rst_n), .uart_txd(uart_txd), .uart_tx_en(core_tx_en),
         .uart_rxd     (uart_rxd),
         .uart_rx_en   (1'b1),
         .uart_rx_break(),
