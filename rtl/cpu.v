@@ -32,7 +32,7 @@ module cpu(
   wire  decode_toReg; 
   wire [1:0] decode_resultSel; 
   wire  decode_aluSrc; 
-  wire  decode_pcAdd; 
+  wire [1:0] decode_pcAdd; 
   wire [6:0] decode_types; 
   wire [1:0] decode_aluCtrlOp; 
   wire  decode_validInst; 
@@ -176,7 +176,10 @@ module cpu(
   wire [31:0] pc; 
 
 
-  gen_regs u_gen_regs ( 
+  // -----------------------------
+  // Replace registers and ALU with your new modules
+  // -----------------------------
+  gen_regs_new u_gen_regs ( 
     .clk(clk),
     .reset(reset),
     .wen(regs_wen),
@@ -188,19 +191,20 @@ module cpu(
     .regRData2(regs_regRData2)
   );
   
+  alu_new u_alu ( 
+    .alu_data1_i(alu_aluIn1),
+    .alu_data2_i(alu_aluIn2),
+    .alu_op_i(alu_aluOp),
+    .alu_result_o(alu_aluOut)
+  );
+
+  // The rest of CPU modules remain unchanged
   alu_ctrl u_alu_ctrl( 
     .funct3(aluControl_funct3),
     .funct7(aluControl_funct7),
     .itype(aluControl_itype),
     .aluCtrlOp(aluControl_aluCtrlOp),
     .aluOp(aluControl_aluOp)
-  );
-
-  alu u_alu ( 
-    .alu_data1_i(alu_aluIn1),
-    .alu_data2_i(alu_aluIn2),
-    .alu_op_i(alu_aluOp),
-    .alu_result_o(alu_aluOut)
   );
 
   forwarding u_forwarding ( 
@@ -280,6 +284,9 @@ module cpu(
     .valid_inst(decode_validInst),
     .imm(decode_imm)
   );
+
+ 
+
 
   id_ex u_id_ex ( 
     .clk(clk),
