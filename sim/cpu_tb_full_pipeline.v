@@ -24,9 +24,10 @@ module cpu_tb_full_pipeline;
     reg         wen;
     reg  [4:0]  reg_waddr;
     reg  [31:0] reg_wdata;
+    reg  [4:0]  reg_raddr1, reg_raddr2;
     wire [31:0] reg_rdata1, reg_rdata2;
 
-    // ÊµÀý»¯ ALU
+    // Êµï¿½ï¿½ï¿½ï¿½ ALU
     alu u_alu (
         .alu_data1_i(alu_in1),
         .alu_data2_i(alu_in2),
@@ -34,7 +35,7 @@ module cpu_tb_full_pipeline;
         .alu_result_o(alu_out)
     );
 
-    // ÊµÀý»¯¼Ä´æÆ÷¶Ñ
+    // Êµï¿½ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½
     gen_regs u_regs (
         .clk(clk),
         .reset(rst),
@@ -47,20 +48,18 @@ module cpu_tb_full_pipeline;
         .regRData2(reg_rdata2)
     );
 
-    reg [4:0] reg_raddr1, reg_raddr2;
-
-    // Ê±ÖÓ
+    // Clock generation
     initial clk = 0;
-    always #5 clk = ~clk; // 10ns Ê±ÖÓÖÜÆÚ
+    always #5 clk = ~clk; // 10ns clock period
 
     initial begin
         rst = 1; wen = 0; alu_in1 = 0; alu_in2 = 0; alu_op = 0; reg_waddr = 0; reg_wdata = 0;
         reg_raddr1 = 5'b00001; reg_raddr2 = 5'b00010;
         #20 rst = 0;
 
-        $display("===== ¿ªÊ¼È«¼Ä´æÆ÷ºÍÖ¸ÁîÑéÖ¤ =====");
+        $display("===== ï¿½ï¿½Ê¼È«ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Ö¤ =====");
 
-        // ¶àÌõÖ¸ÁîÁ¬ÐøÖ´ÐÐ£¬Ð´Èë²»Í¬¼Ä´æÆ÷
+        // ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ð£ï¿½Ð´ï¿½ë²»Í¬ï¿½Ä´ï¿½ï¿½ï¿½
         test_pipeline("ADD", 5, 3, 4'b0000, 5'b00001);
         test_pipeline("SUB", 10, 4, 4'b1000, 5'b00010);
         test_pipeline("AND", 7, 3, 4'b0111, 5'b00011);
@@ -76,17 +75,17 @@ module cpu_tb_full_pipeline;
         test_pipeline("GE", 5, 2, 4'b1100, 5'b01101);
         test_pipeline("GEU", 5, 2, 4'b1011, 5'b01110);
 
-        // x0 ÓÀÔ¶²»¿ÉÐ´
+        // x0 ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½Ð´
         alu_in1 = 7; alu_in2 = 5; alu_op = 4'b0000; #10;
         wen = 1; reg_waddr = 5'b00000; reg_wdata = alu_out; #10;
         wen = 0;
-        $display("³¢ÊÔÐ´ x0: ¼Ä´æÆ÷ x0=%0d (Ó¦Îª0)", u_regs.regs[0]);
+        $display("ï¿½ï¿½ï¿½ï¿½Ð´ x0: ï¿½Ä´ï¿½ï¿½ï¿½ x0=%0d (Ó¦Îª0)", u_regs.regs[0]);
 
-        $display("===== È«²¿ÑéÖ¤Íê³É =====");
+        $display("===== È«ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ =====");
         $finish;
     end
 
-    // ÈÎÎñ£ºÖ´ÐÐÒ»ÌõÖ¸Áî²¢Ð´»Ø¼Ä´æÆ÷
+    // ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½Ò»ï¿½ï¿½Ö¸ï¿½î²¢Ð´ï¿½Ø¼Ä´ï¿½ï¿½ï¿½
     task test_pipeline(
         input [8*10:1] name,
         input [31:0] in1,
@@ -98,25 +97,9 @@ module cpu_tb_full_pipeline;
         alu_in1 = in1; alu_in2 = in2; alu_op = op; #10;
         wen = 1; reg_waddr = waddr; reg_wdata = alu_out; #10;
         wen = 0;
-        $display("Ö¸Áî: %s | ALU_in1=%0d, ALU_in2=%0d, ALU_op=%b, ALU_out=%0d, Ð´¼Ä´æÆ÷ x%0d=%0d",
+        $display("Ö¸ï¿½ï¿½: %s | ALU_in1=%0d, ALU_in2=%0d, ALU_op=%b, ALU_out=%0d, Ð´ï¿½Ä´ï¿½ï¿½ï¿½ x%0d=%0d",
             name, in1, in2, op, alu_out, waddr, u_regs.regs[waddr]);
     end
     endtask
 
-endmodule
- 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
-
-module cpu_tb_full_pipeline(
-
-    );
 endmodule

@@ -1,11 +1,11 @@
 `timescale 1ns/1ps
 module tb_console;
 
-    // 时钟和复位
+    // 鏃堕挓鍜屽浣�
     reg clk = 0;
     reg reset = 1;
 
-    // ---------- ALU 信号 ----------
+    // ---------- ALU 淇″彿 ----------
     reg  [31:0] alu_a, alu_b;
     reg  [3:0]  alu_op;
     wire [31:0] alu_out;
@@ -17,7 +17,7 @@ module tb_console;
         .alu_result_o(alu_out)
     );
 
-    // ---------- 寄存器堆信号 ----------
+    // ---------- 瀵勫瓨鍣ㄥ爢淇″彿 ----------
     reg         wen;
     reg  [4:0]  reg_waddr, reg_raddr1, reg_raddr2;
     reg  [31:0] reg_wdata;
@@ -35,40 +35,40 @@ module tb_console;
         .regRData2(reg_rdata2)
     );
 
-    // 时钟生成
+    // 鏃堕挓鐢熸垚
     always #5 clk = ~clk;  // 100MHz
 
-    // 仿真任务
+    // 浠跨湡浠诲姟
     integer i;
     initial begin
         $display("=== Console Testbench Start ===");
 
-        // 复位寄存器堆
+        // 澶嶄綅瀵勫瓨鍣ㄥ爢
         reset = 1; wen = 0;
         #20;
         reset = 0;
 
-        // ---------------- ALU 测试 ----------------
+        // ---------------- ALU 娴嬭瘯 ----------------
         $display("--- ALU Tests ---");
         alu_test(32'd2, 32'd3, 4'b0000); // ADD
         alu_test(32'd10, 32'd4, 4'b1000); // SUB
         alu_test(32'hFFFF0000, 32'hAAAA5555, 4'b0111); // AND
         alu_test(32'hFFFF0000, 32'hAAAA5555, 4'b0110); // OR
 
-        // ---------------- 寄存器堆测试 ----------------
+        // ---------------- 瀵勫瓨鍣ㄥ爢娴嬭瘯 ----------------
         $display("--- Register Tests ---");
         reg_write(5'd1, 32'h12345678);
         reg_write(5'd2, 32'hDEADBEEF);
 
         reg_read(5'd1, 5'd2);
-        reg_write(5'd0, 32'hFFFFFFFF); // 写 x0 测试
+        reg_write(5'd0, 32'hFFFFFFFF); // 鍐� x0 娴嬭瘯
         reg_read(5'd0, 5'd1);
 
         $display("=== Console Testbench Finished ===");
         $stop;
     end
 
-    // ---------- ALU 测试任务 ----------
+    // ---------- ALU 娴嬭瘯浠诲姟 ----------
     task alu_test(input [31:0] a, b, input [3:0] op);
     begin
         alu_a = a;
@@ -79,7 +79,7 @@ module tb_console;
     end
     endtask
 
-    // ---------- 寄存器写任务 ----------
+    // ---------- 瀵勫瓨鍣ㄥ啓浠诲姟 ----------
     task reg_write(input [4:0] addr, input [31:0] data);
     begin
         reg_waddr = addr;
@@ -92,7 +92,7 @@ module tb_console;
     end
     endtask
 
-    // ---------- 寄存器读任务 ----------
+    // ---------- 瀵勫瓨鍣ㄨ浠诲姟 ----------
     task reg_read(input [4:0] addr1, addr2);
     begin
         reg_raddr1 = addr1;

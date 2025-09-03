@@ -46,11 +46,20 @@ module tb_cpu_alu_reg;
   // Test program memory (simple instructions)
   reg [31:0] program [0:15];
 
-  integer i;
+  // Instruction memory simulation
+  // This block acts like a real instruction memory, providing the instruction
+  // based on the address requested by the CPU's PC.
+  always @(*) begin
+    // The address from the CPU is a byte address. To index the 'program' array
+    // (which is word-addressed), we need to divide by 4 (right-shift by 2).
+    if (imem_valid) begin
+        imem_instr <= program[imem_addr >> 2];
+    end
+  end
 
   initial begin
     reset = 1;
-    imem_instr = 32'b0;
+    // No need to initialize imem_instr here, the always block will handle it.
     dmem_readData = 32'b0;
 
     // Initialize test program
@@ -63,18 +72,20 @@ module tb_cpu_alu_reg;
     program[3] = 32'h00310133; // ADD x2, x2, x3
     program[4] = 32'h00000013; // NOP
     program[5] = 32'h00000013; // NOP
+    program[6] = 32'h00000013; // NOP
+    program[7] = 32'h00000013; // NOP
 
     #20;
     reset = 0;
 
-    // Run simulation for some cycles
-    for(i=0; i<20; i=i+1) begin
+    // Run simulation for enough cycles to see the program execute.
+    repeat (20) begin
       @(posedge clk);
-      imem_instr = program[i];
-      // Print PC and simulated ALU/Registers
-      $display("Time %0t | PC: %0h | Instr: %0h", $time, uut.pc, imem_instr);
+      // Print signals from the pipeline registers for accurate observation
+      // Match internal signal names in cpu.v for hierarchical probing
+      $display("Time %0t | PC: %h | Instr: %h", $time, uut.if_id_pc, uut.if_id_instr);
       $display("x1=%0d x2=%0d x3=%0d", uut.u_gen_regs.regs[1], uut.u_gen_regs.regs[2], uut.u_gen_regs.regs[3]);
-      $display("ALU out=%0d", uut.u_alu.alu_result_o);
+      $display("ALU out=%h", uut.u_alu.alu_result_o);
       $display("-------------------------------");
     end
 
